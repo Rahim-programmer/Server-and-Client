@@ -1,14 +1,16 @@
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
+
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+
 
 
 public class Main {
@@ -37,6 +39,7 @@ public class Main {
         server.createContext("/", Main::handleRequest);
         server.createContext("/apps/", Main::handleApps);
         server.createContext("/apps/profile", Main::handleAppsProfile);
+        server.createContext("/index.html" , Main :: htmlRegistration);
 
     }
 
@@ -136,5 +139,27 @@ public class Main {
     private static void writeHeaders(Writer writer, String type, Headers headers) {
         write(writer, type, "");
         headers.forEach((k, v) -> write(writer, "\t" + k, v.toString()));
+    }
+
+    private static void htmlRegistration(HttpExchange httpExchange) throws IOException {
+        String html = Files.readString(Paths.get("src/index.html"));
+        String css = Files.readString(Paths.get("src/css/forms.css"));
+        html = html.replaceFirst("<head>", "<head><style>" + css + "</style>");
+
+        File fileDist = new File("src/images/1.jpg");
+        try {
+            httpExchange.getResponseHeaders().add("Content-Type", "text/html");
+            int resCode = 2;
+            int length = 0;
+            httpExchange.sendResponseHeaders(resCode, length);
+            PrintWriter writer = (PrintWriter) getWriterFrom(httpExchange);
+            try (writer) {
+                write(writer, "", html + fileDist);
+                writer.flush();
+            }
+        } catch (IOException e) {
+            System.out.println("ERROR 404");
+            e.printStackTrace();
+        }
     }
 }
