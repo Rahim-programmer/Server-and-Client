@@ -146,13 +146,14 @@ public class Main {
         String css = Files.readString(Paths.get("src/css/forms.css"));
         html = html.replaceFirst("<head>", "<head><style>" + css + "</style>");
 
-        File fileDist = new File("src/images/1.jpg");
+        File fileDist = new File("images/1.jpg");
         try {
             httpExchange.getResponseHeaders().add("Content-Type", "text/html");
             int resCode = 2;
             int length = 0;
             httpExchange.sendResponseHeaders(resCode, length);
             PrintWriter writer = (PrintWriter) getWriterFrom(httpExchange);
+
             try (writer) {
                 write(writer, "", html + fileDist);
                 writer.flush();
