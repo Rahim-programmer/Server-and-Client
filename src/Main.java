@@ -10,6 +10,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+
 public class Main {
     public static void main(String[] args) {
         try {
@@ -21,21 +22,22 @@ public class Main {
         }
     }
 
-    
+
     private static HttpServer makeServer() throws IOException {
         String host = "localhost";
         InetSocketAddress address = new InetSocketAddress(host, 9889);
         String msg = "запускаем сервер по адресу" + " http://%s:%s/%n";
         System.out.printf(msg, address.getHostName(), address.getPort());
         HttpServer server = HttpServer.create(address, 50);
-        System.out.println("удачно!");   return server;
+        System.out.println("удачно!");
+        return server;
     }
 
     private static void initRoutes(HttpServer server) {
         server.createContext("/", Main::handleRequest);
         server.createContext("/apps/", Main::handleApps);
-        server.createContext("/apps/profile",Main::handleAppsProfile);
-        server.createContext("/index.html",Main::handleAppsProfile);
+        server.createContext("/apps/profile", Main::handleAppsProfile);
+
     }
 
     private static void handleRequest(HttpExchange exchange) {
@@ -63,7 +65,8 @@ public class Main {
             e.printStackTrace();
         }
     }
-    private static void handleApps(HttpExchange exchange){
+
+    private static void handleApps(HttpExchange exchange) {
         try {
 
             exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=utf-8");
@@ -87,7 +90,7 @@ public class Main {
         }
     }
 
-    private static void handleAppsProfile(HttpExchange exchange){
+    private static void handleAppsProfile(HttpExchange exchange) {
         try {
 
             exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=utf-8");
@@ -104,8 +107,8 @@ public class Main {
                 write(writer, "HTTP Метод", method);
                 write(writer, "Запрос", uri.toString());
                 write(writer, "Обработан через", ctxPath);
-                write(writer,"Атабаев","Рахим");
-                write(writer,"Имя", "Пользователя");
+                write(writer, "Атабаев", "Рахим");
+                write(writer, "Имя", "Пользователя");
                 writeHeaders(writer, "Заголовки запроса",
                         exchange.getRequestHeaders());
                 writer.flush();
@@ -120,6 +123,7 @@ public class Main {
         Charset charset = StandardCharsets.UTF_8;
         return new PrintWriter(output, false, charset);
     }
+
     private static void write(Writer writer, String msg, String method) {
         String data = String.format("%s: %s%n%n", msg, method);
         try {
@@ -128,12 +132,9 @@ public class Main {
             e.printStackTrace();
         }
     }
+
     private static void writeHeaders(Writer writer, String type, Headers headers) {
         write(writer, type, "");
         headers.forEach((k, v) -> write(writer, "\t" + k, v.toString()));
-    }
-
-    private static void handleIndex(Writer writer, String type, Headers headers){
-
     }
 }
