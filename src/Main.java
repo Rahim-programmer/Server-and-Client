@@ -10,9 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-
-
-
 public class Main {
     public static void main(String[] args) {
         try {
@@ -23,7 +20,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
 
     private static HttpServer makeServer() throws IOException {
         String host = "localhost";
@@ -39,15 +35,12 @@ public class Main {
         server.createContext("/", Main::handleRequest);
         server.createContext("/apps/", Main::handleApps);
         server.createContext("/apps/profile", Main::handleAppsProfile);
-        server.createContext("/index.html" , Main :: htmlRegistration);
-
+        server.createContext("/index.html", Main::htmlRegistration);
     }
 
     private static void handleRequest(HttpExchange exchange) {
         try {
-
             exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=utf-8");
-
             int responseCode = 200;
             int length = 0;
             exchange.sendResponseHeaders(responseCode, length);
@@ -71,9 +64,7 @@ public class Main {
 
     private static void handleApps(HttpExchange exchange) {
         try {
-
             exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=utf-8");
-
             int responseCode = 20;
             int length = 0;
             exchange.sendResponseHeaders(responseCode, length);
@@ -95,9 +86,7 @@ public class Main {
 
     private static void handleAppsProfile(HttpExchange exchange) {
         try {
-
             exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=utf-8");
-
             int responseCode = 2;
             int length = 0;
             exchange.sendResponseHeaders(responseCode, length);
